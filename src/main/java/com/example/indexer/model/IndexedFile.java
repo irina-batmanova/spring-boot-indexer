@@ -1,14 +1,17 @@
 package com.example.indexer.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.File;
 import java.util.UUID;
 
 public class IndexedFile {
 
-    public IndexedFile(UUID id, String name, File file) {
+    public IndexedFile(@JsonProperty("id") UUID id,
+                       @JsonProperty("name") String name) {
         this.id = id;
         this.name = name;
-        this.file = file;
+//        this.file = file;
     }
 
     public UUID getId() {
@@ -23,5 +26,5 @@ public class IndexedFile {
 
     private final UUID id;
     private final String name;
-    private final File file;
+//    private final File file;
 }

@@ -1,13 +1,13 @@
 package com.example.indexer.dao;
 
 import com.example.indexer.model.IndexedFile;
+import org.springframework.stereotype.Repository;
 
-import java.io.File;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
+
+@Repository
 public class IndexedPersonStoredOnDisk implements IndexedFileDao {
 
     // TODO: take dir name for files from config
@@ -18,9 +18,8 @@ public class IndexedPersonStoredOnDisk implements IndexedFileDao {
     private static ConcurrentHashMap<String, ConcurrentHashMap<String, String>> index = new ConcurrentHashMap<>();
 
     @Override
-    public int saveFileWithId(UUID id, IndexedFile indexedFile) {
-        filesList.put(id, indexedFile);
-
-        return 0;
+    public UUID saveFile(IndexedFile indexedFile) {
+        filesList.put(indexedFile.getId(), indexedFile);
+        return indexedFile.getId();
     }
 }
