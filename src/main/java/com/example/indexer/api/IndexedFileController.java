@@ -1,24 +1,18 @@
 package com.example.indexer.api;
-
-import com.example.indexer.model.IndexedFile;
 import com.example.indexer.service.IndexedFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.UUID;
 
 @RequestMapping("api/v1/files")
@@ -33,27 +27,20 @@ public class IndexedFileController {
     private final IndexedFileService fileService;
 
     @PostMapping
-    public ResponseEntity uploadToLocalFileSystem(@RequestParam("file") MultipartFile file) {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        UUID fileId = this.fileService.saveFile(fileName);
-        String fileBasePath = "/Users/irinanifantova/indexer_data/";
-        Path path = Paths.get(fileBasePath + fileId);
-        try {
-            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public ResponseEntity uploadFile(@RequestParam("file") MultipartFile file) {
+        UUID fileId = this.fileService.saveFile(file);
+        String endpointPath = this.getClass().getAnnotation(RequestMapping.class).value()[0] + "/";
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/v1/files/")
+                .path(endpointPath)
                 .path(String.valueOf(fileId)).path("/download/")
                 .toUriString();
         return ResponseEntity.ok(fileDownloadUri);
     }
 
-    @GetMapping("{fileName:.+}/download")
-    public ResponseEntity downloadFileFromLocal(@PathVariable String fileName) {
-        String fileBasePath = "/Users/irinanifantova/indexer_data/";
-        Path path = Paths.get(fileBasePath + fileName);
+    @GetMapping("{fileId:.+}/download")
+    public ResponseEntity downloadFile(@PathVariable UUID fileId) {
+        String fileBasePath = "/opt/indexer_data/";
+        Path path = Paths.get(fileBasePath + fileId);
         Resource resource = null;
         try {
             resource = new UrlResource(path.toUri());
@@ -61,8 +48,27 @@ public class IndexedFileController {
             e.printStackTrace();
         }
         return ResponseEntity.ok()
-//                .contentType(MediaType.parseMediaType())
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
+
     }
+
+    @GetMapping
+    public ResponseEntity getFiles(@RequestParam String word) {
+        String endpointPath = this.getClass().getAnnotation(RequestMapping.class).value()[0];
+        ArrayList<String> fileDownloadUris = new ArrayList<>();
+        HashSet<UUID> filesWithWord = this.fileService.getFiles(word);
+        for (UUID fileId : filesWithWord) {
+            fileDownloadUris.add(ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path(endpointPath)
+                    .path(String.valueOf(fileId)).path("/download/")
+                    .toUriString());
+        }
+        return ResponseEntity.ok().body(fileDownloadUris);
+    }
+
+//    @DeleteMapping
+//    public ResponseEntity deleteFile(@PathVariable String fileId) {
+//        return ResponseEntity.ok().body({"ava":"ava"});
+//    }
 }
