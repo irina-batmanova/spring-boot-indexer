@@ -1,7 +1,6 @@
 package com.example.indexer.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.UUID;
 
 public class IndexedFile {
@@ -9,6 +8,11 @@ public class IndexedFile {
     public IndexedFile(@JsonProperty("id") UUID id,
                        @JsonProperty("name") String name) {
         this.id = id;
+        this.name = name;
+    }
+
+    public IndexedFile(@JsonProperty("name") String name) {
+        this.id = UUID.randomUUID();
         this.name = name;
     }
 
