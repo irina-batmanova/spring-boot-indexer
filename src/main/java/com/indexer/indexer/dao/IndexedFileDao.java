@@ -1,6 +1,6 @@
-package com.example.indexer.dao;
+package com.indexer.indexer.dao;
 
-import com.example.indexer.model.IndexedFile;
+import com.indexer.indexer.model.IndexedFile;
 
 import java.util.ArrayList;
 import java.util.UUID;

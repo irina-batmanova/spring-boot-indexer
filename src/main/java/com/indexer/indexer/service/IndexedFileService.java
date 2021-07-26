@@ -1,8 +1,8 @@
-package com.example.indexer.service;
+package com.indexer.indexer.service;
 
-import com.example.indexer.dao.IndexDao;
-import com.example.indexer.dao.IndexedFileDao;
-import com.example.indexer.model.IndexedFile;
+import com.indexer.indexer.dao.IndexDao;
+import com.indexer.indexer.dao.IndexedFileDao;
+import com.indexer.indexer.model.IndexedFile;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;

@@ -1,6 +1,6 @@
-package com.example.indexer.dao;
+package com.indexer.indexer.dao;
 
-import com.example.indexer.model.IndexedFile;
+import com.indexer.indexer.model.IndexedFile;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

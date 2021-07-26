@@ -1,4 +1,4 @@
-package com.example.indexer.model;
+package com.indexer.indexer.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;

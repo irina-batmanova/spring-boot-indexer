@@ -1,4 +1,4 @@
-package com.example.indexer.dao;
+package com.indexer.indexer.dao;
 
 
 import java.util.HashSet;
