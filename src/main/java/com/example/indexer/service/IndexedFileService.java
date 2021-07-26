@@ -82,4 +82,8 @@ public class IndexedFileService {
         return 0;
     }
 
+    public HashSet<String> getWords(UUID fileId) {
+        return this.indexDao.getWordsInFile(fileId);
+    }
+
 }

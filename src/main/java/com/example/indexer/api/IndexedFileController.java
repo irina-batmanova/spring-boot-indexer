@@ -70,6 +70,17 @@ public class IndexedFileController {
 
     }
 
+    @GetMapping("{fileId:.+}")
+    public ResponseEntity getWordsInFile(@PathVariable UUID fileId) {
+        HashSet<String> words = this.fileService.getWords(fileId);
+        if (words == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "File not found"
+            );
+        }
+        return ResponseEntity.ok(words);
+    }
+
     @GetMapping
     public ResponseEntity findFiles(@RequestParam(required = false) String word) {
         if (word == null) {
@@ -77,6 +88,9 @@ public class IndexedFileController {
             return ResponseEntity.ok().body(files);
         }
         HashSet<UUID> filesWithWord = this.fileService.getFiles(word);
+        for (UUID uid : filesWithWord) {
+            System.out.println(uid);
+        }
         ArrayList<IndexedFile> arr = new ArrayList<>();
         if (filesWithWord == null) {
             return ResponseEntity.ok().body(arr);
@@ -87,7 +101,7 @@ public class IndexedFileController {
         return ResponseEntity.ok().body(arr);
     }
 
-    @DeleteMapping
+    @DeleteMapping("{fileId:.+}")
     public ResponseEntity deleteFile(@PathVariable UUID fileId) {
         Integer status = this.fileService.deleteFile(fileId);
         if (status != 0) {

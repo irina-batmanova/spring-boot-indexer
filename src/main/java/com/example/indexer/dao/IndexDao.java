@@ -12,4 +12,6 @@ public interface IndexDao {
 
     void deleteFromIndex(UUID fileId);
 
+    HashSet<String> getWordsInFile(UUID fileId);
+
 }

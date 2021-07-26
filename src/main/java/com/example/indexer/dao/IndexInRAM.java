@@ -20,16 +20,15 @@ public class IndexInRAM implements IndexDao {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        System.out.println(value);
         value = value.replaceAll("\\p{Punct}", "");
         String[] words = value.split(" ");
-        if (!reversedIndex.contains(fileId)) {
+        if (!reversedIndex.containsKey(fileId)) {
             reversedIndex.put(fileId, new HashSet<>());
         }
         HashSet<String> wordsInFile = reversedIndex.get(fileId);
         for (String word : words) {
             String lowerWord = word.toLowerCase(Locale.ROOT);
-            if (!index.contains(lowerWord)) {
+            if (!index.containsKey(lowerWord)) {
                 index.put(lowerWord, new HashSet<>());
             }
             HashSet<UUID> filesWithWord = index.get(lowerWord);
@@ -54,6 +53,11 @@ public class IndexInRAM implements IndexDao {
             filesWithWord.remove(fileId);
         }
         reversedIndex.remove(fileId);
+    }
+
+    @Override
+    public HashSet<String> getWordsInFile(UUID fileId) {
+        return reversedIndex.get(fileId);
     }
 
 }
