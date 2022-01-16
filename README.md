@@ -1,11 +1,6 @@
 ## Run service
-1. Создать директорию /opt/indexer_data/ 
-   и дать приложению права на чтение и запись 
-   (или поменять настройку storage.path 
-   в application.properties, чтобы выбрать 
-   другую директорию для файлов)
-2. mvn install
-3. java -jar target/indexer-0.0.1-SNAPSHOT.jar
+1. docker build -t indexer .
+2. docker run -p 8080:8080 indexer
 
 ## Endpoints
 1. POST /api/v1/files -F file=@/path/to/file - создание файла
